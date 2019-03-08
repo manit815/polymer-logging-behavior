@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<script>
+    LoggerBehavior = {
+        properties: {
+            logLevel: {
+                type: String,
+                value: 'All'
+            },
+            logMsg: {
+                type: Object
+            }
+        },
+
+        setLogLevel: function (level) {
+
+            this.logLevel = level ? level : this.logLevel;
+            console.log(level, this.logLevel);
+        },
+
+        all: function (msg) {
+            if (this.logLevel !== 'ERROR') {
+                console.log(msg);
+            }
+        },
+        debug: function (msg) {
+            if (this.logLevel === 'ALL' || this.logLevel === 'DEBUG') {
+                console.debug(msg);
+            }
+        },
+        info: function (msg) {
+            if (this.logLevel === 'ALL' || this.logLevel === 'DEBUG' || this.logLevel === 'INFO') {
+                console.info(msg);
+            }
+        },
+        warn: function (msg) {
+            if (this.logLevel === 'ALL' || this.logLevel === 'DEBUG' || this.logLevel === 'INFO' || this.logLevel === 'WARN') {
+                console.warn(msg);
+            }
+        },
+        error: function (msg) {
+            this.logMsg = {
+                date: new Date().toISOString(),
+                level: 'ERROR',
+                message: msg
+            }
+            if (this.logLevel === 'ERROR') {
+                console.error(this.logMsg);
+                this.registerLogs(this.logMsg);
+            }
+        },
+
+        registerLogs: function (msg) {
+            var ajax = document.createElement('iron-ajax');
+            ajax.id = 'ajax';
+            ajax.contentType = "application/json";
+            ajax.handleAs = "json";
+            ajax.url = 'https://jsonplaceholder.typicode.com/posts';
+            ajax.method = 'post';
+            ajax.body = JSON.stringify(msg);
+            ajax.addEventListener('response', function (event) {
+                //response handler    
+                console.log(event);
+            });
+            ajax.generateRequest();
+        },
+
+    }
+</script>

@@ -20,7 +20,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<!-- <script type="application/javascript" src="../bower_components/iron-ajax/iron-ajax.js"></script>
+<script type="application/javascript" src="../bower_components/iron-ajax/iron-request.js"></script> -->
 <link rel="import" href="my-icons.html">
+
+<link rel="import" href="behavior/logger-behavior.html">
+
+
 
 <dom-module id="my-app">
   <template>
@@ -120,12 +126,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePageChanged(routeData.page)',
       ],
 
+      behaviors: [LoggerBehavior],
+
       _routePageChanged: function(page) {
         this.page = page || 'content-view';
 
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
+        this.setLogLevel('ERROR');
+        this.all('logging @ all');
+        this.debug('logging @ debug');
+        this.info('logging @ info');
+        this.warn('logging @ warn');
+        this.error('logging @ error');
       },
 
       _pageChanged: function(page) {
